@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Manage Companies{% endblock %}
+{% block content %}
+  <div class="card p-3 mb-3">
+    <h4 class="mb-3">Company Management</h4>
+    <form class="row g-2 mb-3" method="get">
+      <div class="col-md-8">
+        <input type="search" name="q" class="form-control" placeholder="Search by name or ID" value="{{ query }}" />
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary w-100" type="submit">Search</button>
+      </div>
+    </form>
+    {% if companies %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Details</th>
+              <th>Contact</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for company in companies %}
+              <tr>
+                <td>
+                  <small class="text-muted">ID {{ company.id }}</small><br />
+                  <small class="text-muted">Email: {{ company.user.email }}</small>
+                </td>
+                <td>
+                  <strong>{{ company.hr_contact or '—' }}</strong><br />
+                  <small class="text-muted">{{ company.website or '—' }}</small>
+                </td>
+                <td>
+                  <span class="badge bg-light text-dark">{{ company.approval_status }}</span>
+                  {% if company.is_blacklisted %}
+                    <span class="badge bg-danger">Blacklisted</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="d-flex flex-wrap gap-2">
+                    <form
+                      method="post"
+                      action="{{ url_for('admin_update_company', company_id=company.id) }}"
+                      class="m-0"
+                    >
+                      <input type="hidden" name="action" value="approve" />
+                      <button class="btn btn-sm btn-success" type="submit">Approve</button>
+                    </form>
+                    <form
+                      method="post"
+                      action="{{ url_for('admin_update_company', company_id=company.id) }}"
+                      class="m-0"
+                    >
+                      <input type="hidden" name="action" value="reject" />
+                      <button class="btn btn-sm btn-warning" type="submit">Reject</button>
+                    </form>
+                    <form
+                      method="post"
+                      action="{{ url_for('admin_update_company', company_id=company.id) }}"
+                      class="m-0"
+                    >
+                      <input type="hidden" name="action" value="blacklist" />
+                      <button class="btn btn-sm btn-outline-danger" type="submit">
+                        {% if company.is_blacklisted %}Remove{% else %}Blacklist{% endif %}
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">No companies found.</p>
+    {% endif %}
+  </div>
+{% endblock %}

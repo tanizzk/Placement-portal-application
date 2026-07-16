@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}All Applications{% endblock %}
+{% block content %}
+  <div class="card p-3">
+    <h4 class="mb-3">Application Tracking</h4>
+    {% if applications %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Drive</th>
+              <th>Company</th>
+              <th>Status</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for application in applications %}
+              <tr>
+                <td>{{ application.student.user.full_name }}</td>
+                <td>{{ application.drive.job_title }}</td>
+                <td>{{ application.drive.company.name }}</td>
+                <td><span class="badge bg-secondary">{{ application.status }}</span></td>
+                <td>
+                  <form method="post" action="{{ url_for('admin_update_application', application_id=application.id) }}">
+                    {{ status_form.hidden_tag() }}
+                    {{ status_form.status(class="form-select form-select-sm mb-2") }}
+                    <button class="btn btn-sm btn-primary w-100" type="submit">Update</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">No application records.</p>
+    {% endif %}
+  </div>
+{% endblock %}

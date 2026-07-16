@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Update Profile{% endblock %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card p-4">
+        <h3 class="mb-3">Update Student Profile</h3>
+        <form method="post" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.branch.label(class="form-label") }}
+            {{ form.branch(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.graduation_year.label(class="form-label") }}
+            {{ form.graduation_year(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.mobile.label(class="form-label") }}
+            {{ form.mobile(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.placement_history.label(class="form-label") }}
+            {{ form.placement_history(class="form-control", rows=4) }}
+          </div>
+          <div class="mb-3">
+            {{ form.resume.label(class="form-label") }}
+            {{ form.resume(class="form-control") }}
+          </div>
+          <button class="btn btn-primary" type="submit">Update Profile</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Placement Drives{% endblock %}
+{% block content %}
+  <div class="card p-3">
+    <h4 class="mb-3">Manage Placement Drives</h4>
+    {% if drives %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Drive</th>
+              <th>Company</th>
+              <th>Status</th>
+              <th>Applicants</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for drive in drives %}
+              <tr>
+                <td>
+                  <strong>{{ drive.job_title }}</strong><br />
+                  <small class="text-muted">Deadline {{ drive.application_deadline.strftime('%b %d, %Y') }}</small>
+                </td>
+                <td>{{ drive.company.name }}</td>
+                <td><span class="badge bg-light text-dark">{{ drive.status }}</span></td>
+                <td>{{ drive.applicant_count }}</td>
+                <td class="text-nowrap">
+                  <form method="post" action="{{ url_for('admin_update_drive', drive_id=drive.id) }}" class="d-inline">
+                    <input type="hidden" name="action" value="approve" />
+                    <button class="btn btn-sm btn-success" type="submit">Approve</button>
+                  </form>
+                  <form method="post" action="{{ url_for('admin_update_drive', drive_id=drive.id) }}" class="d-inline">
+                    <input type="hidden" name="action" value="reject" />
+                    <button class="btn btn-sm btn-warning" type="submit">Reject</button>
+                  </form>
+                  <form method="post" action="{{ url_for('admin_update_drive', drive_id=drive.id) }}" class="d-inline">
+                    <input type="hidden" name="action" value="close" />
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Close</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">No placement drives recorded.</p>
+    {% endif %}
+  </div>
+{% endblock %}

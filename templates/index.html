@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Placement Portal Application{% endblock %}
+{% block content %}
+  <section class="hero rounded-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+        <h1>Placement Portal Application</h1>
+        <p>
+          A centralized dashboard where institutes, companies, and students collaborate over placement drives.
+          Approve companies, manage drives, and track applications without scattered spreadsheets.
+        </p>
+      </div>
+      <div class="col-md-5 text-md-end">
+        <a href="{{ url_for('login') }}" class="btn btn-lg btn-outline-light me-2">Login</a>
+        <a href="{{ url_for('student_register') }}" class="btn btn-lg btn-light text-primary">Get Started</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <h3 class="section-title">Quick Snapshot</h3>
+    <div class="dashboard-grid">
+      <div class="card p-3">
+        <h5 class="mb-0">Students</h5>
+        <p class="display-6 fw-bold">{{ stats.students }}</p>
+      </div>
+      <div class="card p-3">
+        <h5 class="mb-0">Companies</h5>
+        <p class="display-6 fw-bold">{{ stats.companies }}</p>
+      </div>
+      <div class="card p-3">
+        <h5 class="mb-0">Placement Drives</h5>
+        <p class="display-6 fw-bold">{{ stats.drives }}</p>
+      </div>
+      <div class="card p-3">
+        <h5 class="mb-0">Applications</h5>
+        <p class="display-6 fw-bold">{{ stats.applications }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-4">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card responsive-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="section-title">Pending Approvals</h5>
+            <small class="text-muted">Updated just now</small>
+          </div>
+          <p class="mb-1">Companies awaiting approval: <strong>{{ pending.companies }}</strong></p>
+          <p class="mb-0">Drives awaiting approval: <strong>{{ pending.drives }}</strong></p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card responsive-card">
+          <h5 class="section-title">Recent Drives</h5>
+          {% if recent_drives %}
+            <ul class="list-unstyled mb-0">
+              {% for drive in recent_drives %}
+                <li class="mb-2">
+                  <strong>{{ drive.job_title }}</strong><br /> 
+                  <small class="text-muted">{{ drive.company.name }} &bull; {{ drive.location or 'Remote' }}</small>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="mb-0 text-muted">No drives yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

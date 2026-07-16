@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Manage Students{% endblock %}
+{% block content %}
+  <div class="card p-3 mb-3">
+    <h4 class="mb-3">Student Management</h4>
+    <form class="row g-2 mb-3" method="get">
+      <div class="col-md-8">
+        <input type="search" name="q" class="form-control" placeholder="Search the batch" value="{{ query }}" />
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary w-100" type="submit">Search</button>
+      </div>
+    </form>
+    {% if students %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Branch</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for profile in students %}
+              <tr>
+                <td>
+                  <strong>{{ profile.user.full_name }}</strong><br />
+                  <small class="text-muted">{{ profile.user.email }}</small>
+                </td>
+                <td>{{ profile.branch or '—' }}</td>
+                <td>
+                  {% if profile.is_blacklisted %}
+                    <span class="badge bg-danger">Blacklisted</span>
+                  {% else %}
+                    <span class="badge bg-success">Active</span>
+                  {% endif %}
+                </td>
+                <td class="text-nowrap">
+                  <form method="post" action="{{ url_for('admin_update_student', student_id=profile.id) }}" class="d-inline">
+                    <input type="hidden" name="action" value="blacklist" />
+                    <button class="btn btn-sm btn-outline-danger" type="submit">
+                      {% if profile.is_blacklisted %}Remove{% else %}Blacklist{% endif %}
+                    </button>
+                  </form>
+                  {% if profile.user.is_active %}
+                    <form method="post" action="{{ url_for('admin_update_student', student_id=profile.id) }}" class="d-inline">
+                    <input type="hidden" name="action" value="deactivate" />
+                      <button class="btn btn-sm btn-warning" type="submit">Deactivate</button>
+                    </form>
+                  {% else %}
+                    <form method="post" action="{{ url_for('admin_update_student', student_id=profile.id) }}" class="d-inline">
+                    <input type="hidden" name="action" value="activate" />
+                      <button class="btn btn-sm btn-success" type="submit">Activate</button>
+                    </form>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">No students match this query.</p>
+    {% endif %}
+  </div>
+{% endblock %}

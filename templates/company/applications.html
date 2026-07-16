@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Applications - {{ drive.job_title }}{% endblock %}
+{% block content %}
+  <div class="card p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h4 class="mb-0">{{ drive.job_title }}</h4>
+        <small class="text-muted">{{ drive.job_description[:120] }}...</small>
+      </div>
+      <a href="{{ url_for('company_dashboard') }}" class="btn btn-outline-secondary btn-sm">Back to Dashboard</a>
+    </div>
+    {% if drive.applications %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Applied On</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for application in drive.applications %}
+              <tr>
+                <td>
+                  <strong>{{ application.student.user.full_name }}</strong><br />
+                  <small class="text-muted">{{ application.student.branch or '—' }}</small>
+                </td>
+                <td>{{ application.application_date.strftime('%b %d, %Y') }}</td>
+                <td>
+                  <span class="badge bg-secondary">{{ application.status }}</span>
+                </td>
+                <td>
+                  <form method="post" action="{{ url_for('company_update_application', application_id=application.id) }}">
+                    {{ status_form.hidden_tag() }}
+                    {{ status_form.status(class="form-select form-select-sm mb-2") }}
+                    <button class="btn btn-sm btn-primary w-100" type="submit">Update</button>
+                  </form>
+                  {% if application.student.resume_filename %}
+                    <a href="{{ url_for('serve_resume', filename=application.student.resume_filename) }}" class="small d-block mt-2">Download resume</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted mb-0">No applications yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}
